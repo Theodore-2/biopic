@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Yönetim Paneli</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <h1>Yönetim Paneli</h1>
+
+  <form id="postForm">
+    <label>Kategori:
+      <select name="category" required>
+        <option value="biopic">Biopic</option>
+        <option value="dot">DoT</option>
+      </select>
+    </label><br>
+    <label>Başlık: <input type="text" name="title" required></label><br>
+    <label>İçerik: <textarea name="content" required></textarea></label><br>
+    <label>Medya: <input type="file" name="media"></label><br>
+    <button type="submit">Paylaş</button>
+  </form>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

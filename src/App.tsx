@@ -1,70 +1,52 @@
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import IndexPage from './pages/IndexPage'
 import DotPage from './pages/DotPage'
 import BiopicPage from './pages/BiopicPage'
-import AdminPanel from './pages/AdminPage'
-import { useState } from 'react'
+import AdminPage from './pages/AdminPage'
 
 function App() {
-  const [auth, setAuth] = useState(false)
+  const location = useLocation()
 
   const handleAuth = () => {
     const password = prompt('Şifreyi giriniz:')
     if (password === 'theo123') {
-      setAuth(true)
+      localStorage.setItem('authenticated', 'true')
+      window.location.href = '/admin' // Yönlendirme garanti çalışır
     } else {
       alert('Hatalı şifre!')
     }
   }
 
+  const isOnAdminPage = location.pathname === '/admin'
+
   return (
     <div>
-      {/* Başlık */}
       <h1 style={{ textAlign: 'center', marginTop: '20px' }}>THEODORE-2</h1>
 
-      {/* Navigasyon Butonları */}
-      <div
-        style={{
+      {!isOnAdminPage && (
+        <div style={{
           display: 'flex',
           justifyContent: 'center',
           gap: '10px',
           margin: '20px 0',
-        }}
-      >
-        <Link to="/">
-          <button style={buttonStyle}>Anasayfa</button>
-        </Link>
-        <Link to="/dot">
-          <button style={buttonStyle}>DoT</button>
-        </Link>
-        <Link to="/biopic">
-          <button style={buttonStyle}>Biopic</button>
-        </Link>
+        }}>
+          <Link to="/"><button style={buttonStyle}>Anasayfa</button></Link>
+          <Link to="/dot"><button style={buttonStyle}>DoT</button></Link>
+          <Link to="/biopic"><button style={buttonStyle}>Biopic</button></Link>
+          <button style={buttonStyle} onClick={handleAuth}>For Theodore-2</button>
+        </div>
+      )}
 
-        {/* Şifre girildiyse doğrudan admin sayfasına giden buton */}
-        {auth ? (
-          <Link to="/admin">
-            <button style={buttonStyle}>For Theodore-2</button>
-          </Link>
-        ) : (
-          <button style={buttonStyle} onClick={handleAuth}>
-            For Theodore-2
-          </button>
-        )}
-      </div>
-
-      {/* Rotalar */}
       <Routes>
         <Route path="/" element={<IndexPage />} />
         <Route path="/dot" element={<DotPage />} />
         <Route path="/biopic" element={<BiopicPage />} />
-        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </div>
   )
 }
 
-// Ortak buton stili
 const buttonStyle: React.CSSProperties = {
   padding: '6px 14px',
   border: '1px solid #ccc',

@@ -1,20 +1,14 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
-const AdminPanel = () => {
-  const [authorized, setAuthorized] = useState(false)
+const AdminPage = () => {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [category, setCategory] = useState('dot') // varsayılan olarak dot
-  const navigate = useNavigate()
+  const [category, setCategory] = useState('dot')
 
-  const handleClick = () => {
-    const password = prompt('Şifre girin:')
-    if (password === 'theo123') {
-      setAuthorized(true)
-    } else {
-      alert('Hatalı şifre')
-    }
+  const isAuthenticated = localStorage.getItem('authenticated') === 'true'
+  if (!isAuthenticated) {
+    window.location.href = '/' // sayfa yenilense bile koruma devam eder
+    return null
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,7 +30,7 @@ const AdminPanel = () => {
 
       if (response.ok) {
         alert('İçerik başarıyla eklendi!')
-        navigate('/') // ✅ ana sayfaya yönlendir
+        window.location.href = '/'
       } else {
         alert('Kaydetme hatası')
       }
@@ -48,39 +42,39 @@ const AdminPanel = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      {!authorized ? (
-        <button onClick={handleClick}>For Theodore-2</button>
-      ) : (
-        <div>
-          <h2>İçerik Ekle</h2>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Başlık"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
-            <br />
-            <textarea
-              placeholder="İçerik"
-              rows={4}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              required
-            />
-            <br />
-            <select value={category} onChange={(e) => setCategory(e.target.value)}>
-              <option value="dot">DoT</option>
-              <option value="biopic">Biopic</option>
-            </select>
-            <br />
-            <button type="submit">Kaydet</button>
-          </form>
-        </div>
-      )}
+      <h2>Yönetim Paneli</h2>
+      <form onSubmit={handleSubmit}>
+        <label>Kategori:</label>
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          required
+        >
+          <option value="dot">DoT</option>
+          <option value="biopic">Biopic</option>
+        </select>
+        <br /><br />
+        <label>Başlık:</label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+        <br /><br />
+        <label>İçerik:</label>
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          required
+          rows={4}
+          cols={40}
+        />
+        <br /><br />
+        <button type="submit">Paylaş</button>
+      </form>
     </div>
   )
 }
 
-export default AdminPanel
+export default AdminPage
